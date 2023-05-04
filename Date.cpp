@@ -25,6 +25,7 @@ int Date::getTotalDays()
 	for (int i = 0; i < month - 1; i++)
 	{
 		total_days += days_in_a_month[i];
+		if (this->leapYear() && i == 2) { total_days++; }
 	}
 	leap_years += year / 4 - year / 100 + year / 400; if (year_is_leap) leap_years--;
 	total_days += leap_years * 366 + (year - leap_years) * 365;
@@ -130,7 +131,9 @@ Date Date::operator+=(int plus_days)
 
 	else
 	{
+		if (this->leapYear() && month == 2) { plus_days--; }
 		plus_days -= days_in_a_month[month - 1] - day + 1; day = 1; month++;
+
 		while (plus_days > days_in_a_month[month - 1])
 		{
 			plus_days -= days_in_a_month[month - 1];
@@ -139,6 +142,8 @@ Date Date::operator+=(int plus_days)
 				year++; month = 1;
 			}
 			else month++;
+
+			if (this->leapYear() && month == 2) { plus_days--; }
 		}
 		day += plus_days;
 	}
